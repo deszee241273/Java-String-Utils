@@ -1,18 +1,14 @@
 package functional;
 
-import static java.util.Comparator.comparingInt;
 import static java.util.function.Function.identity;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class StringProcessingUtils {
 
 	/**
@@ -29,7 +25,7 @@ public class StringProcessingUtils {
 		// compare length.
 		if (a.length() != b.length())
 			return false;
-		// compare Map equality.
+		// compare Map equalities.
 		return freqMapFactory(a).entrySet().equals(freqMapFactory(b).entrySet());
 
 	}
@@ -50,27 +46,20 @@ public class StringProcessingUtils {
 			return str.length();
 
 		var set = new HashSet<String>();
-		var max = new HashSet<String>();
-		var sb = new StringBuilder();
+		var countMax = new AtomicInteger();
 
-		str.chars().mapToObj(c -> "" + (char) c).forEachOrdered(c -> {
+		str.chars().mapToObj(c -> "" + (char) c).forEach(c -> {
 
-			if (set.add(c)) {
-				sb.append(c);
-			} else {
+			if (!set.add(c)) {
+
+				countMax.set(Math.max(countMax.get(), set.size()));
 				set.clear();
-				max.add(sb.toString());
-				sb.setLength(0);
 			}
 
 		});
-		if (!sb.isEmpty())
-			max.add(sb.toString());
+		countMax.set(Math.max(countMax.get(), set.size()));
 
-		var longest = max.stream().max(comparingInt(String::length)).orElseThrow().length();
-		log.info("Max length non-repeat:" + longest);
-
-		return longest;
+		return countMax.get();
 
 	}
 
