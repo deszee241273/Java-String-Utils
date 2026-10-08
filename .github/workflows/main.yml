@@ -23,4 +23,4 @@ jobs:
         with:
           java-version: 25
           maven-version: '${{ matrix.maven }}'
-      - run: mvn -V -B package --file pom.xml
+      - run: mvn -V -B verify --file pom.xml
