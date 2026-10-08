@@ -6,6 +6,7 @@ import static java.util.function.Function.identity;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -25,28 +26,25 @@ public class StringProcessingUtils {
 		Objects.requireNonNull(a);
 		Objects.requireNonNull(b);
 
-		// check lengths.
+		// compare length.
 		if (a.length() != b.length())
 			return false;
+		// compare Map equality.
+		return freqMapFactory(a).entrySet().equals(freqMapFactory(b).entrySet());
 
-		// string a
-		var mapA = a.chars().mapToObj(c -> (char) c)
+	}
+
+	private static Map<Character, Long> freqMapFactory(String str) {
+
+		return str.chars().mapToObj(c -> (char) c)
 				.collect(Collectors.groupingBy(identity(), HashMap::new, Collectors.counting()));
-
-		// string b.
-
-		var mapB = b.chars().mapToObj(c -> (char) c)
-				.collect(Collectors.groupingBy(identity(), HashMap::new, Collectors.counting()));
-
-		return mapA.entrySet().equals(mapB.entrySet());
 
 	}
 
 	static int maxNonRepeatCharSequence(String str) {
 
 		Objects.requireNonNull(str);
-		var frequencyMap = str.chars().mapToObj(c -> (char) c)
-				.collect(Collectors.groupingBy(identity(), LinkedHashMap::new, Collectors.counting()));
+		var frequencyMap = freqMapFactory(str);
 
 		if (str.length() == frequencyMap.size())
 			return str.length();
