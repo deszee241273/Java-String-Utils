@@ -1,26 +1,39 @@
 name: Java CI with Maven
-'on':
+
+on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        maven:
-          - 3.8.8
-          - 3.9.16
-        
-    name: 'Maven ${{ matrix.maven }} sample'
+      fail-fast: false
+
+    name: Java ${{ matrix.java }} / Maven ${{ matrix.maven }}
+
     steps:
-      - name: Setup Maven Action
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      - name: Set up Maven
         uses: s4u/setup-maven-action@v1.21.0
         with:
-          java-version: 25
-          maven-version: '${{ matrix.maven }}'
-      - run: mvn -V -B verify --file pom.xml
+          maven-version: 3.9.16
+
+      - name: Build and test
+        run: mvn -B --update-snapshots verify
