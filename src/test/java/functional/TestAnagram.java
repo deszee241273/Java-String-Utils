@@ -11,7 +11,7 @@ class TestAnagram {
 	@Test
 	@DisplayName("input strings are anagrammatic.")
 	void test_assert_anagram() {
-		assertTrue(StringProcessingUtils.isAnagram("racecar", "carrace"));
+		assertTrue(StringProcessingUtils.isAnagram("representationism", "misrepresentation"));
 	}
 
 	@Test

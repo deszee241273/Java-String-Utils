@@ -40,26 +40,24 @@ public class StringProcessingUtils {
 	static int maxNonRepeatCharSequence(String str) {
 
 		Objects.requireNonNull(str);
-		var frequencyMap = freqMapFactory(str);
 
-		if (str.length() == frequencyMap.size())
+		if (str.length() == freqMapFactory(str).size())
 			return str.length();
 
 		var set = new HashSet<String>();
 		var countMax = new AtomicInteger();
 
-		str.chars().mapToObj(c -> "" + (char) c).forEach(c -> {
+		str.chars().mapToObj(c -> "" + (char) c).forEachOrdered(o -> {
 
-			if (!set.add(c)) {
+			if (!set.add(o)) {
 
 				countMax.set(Math.max(countMax.get(), set.size()));
 				set.clear();
 			}
 
 		});
-		countMax.set(Math.max(countMax.get(), set.size()));
 
-		return countMax.get();
+		return countMax.get() > set.size() ? countMax.get() : set.size();
 
 	}
 
