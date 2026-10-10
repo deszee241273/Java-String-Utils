@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class StringProcessingUtils {
+public class StringAnalysisUtils {
 
 	/**
 	 * 
@@ -21,6 +21,9 @@ public class StringProcessingUtils {
 
 		Objects.requireNonNull(a);
 		Objects.requireNonNull(b);
+
+		if (a.equals(b))
+			return true;
 
 		// compare length.
 		if (a.length() != b.length())
@@ -61,7 +64,7 @@ public class StringProcessingUtils {
 
 	}
 
-	private StringProcessingUtils() {
+	private StringAnalysisUtils() {
 	}
 
 }
