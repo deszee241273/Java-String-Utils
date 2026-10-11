@@ -4,6 +4,7 @@ import static java.util.function.Function.identity;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,7 +41,7 @@ public class StringAnalysisUtils {
 
 	}
 
-	static int maxNonRepeatCharSequence(String str) {
+	static int maxNonRepeatSequence(String str) {
 
 		Objects.requireNonNull(str);
 
@@ -62,6 +63,12 @@ public class StringAnalysisUtils {
 
 		return countMax.get() > set.size() ? countMax.get() : set.size();
 
+	}
+
+	static boolean isPalindrome(String string) {
+		
+		var h = freqMapFactory(string);
+		return true;
 	}
 
 	private StringAnalysisUtils() {
