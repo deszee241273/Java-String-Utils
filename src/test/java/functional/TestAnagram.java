@@ -12,13 +12,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 class TestAnagram {
 
 	@ParameterizedTest
-	@MethodSource("inputsAndResults")
+	@MethodSource("assertions")
 	@DisplayName("test for anagrammatic char sequence.")
 	void test_assert_not_anagram(String[] input, boolean exp) {
 		assertEquals(exp, StringAnalysisUtils.isAnagram(input[0], input[1]));
 	}
 
-	private static Stream<Arguments> inputsAndResults() {
+	private static Stream<Arguments> assertions() {
 
 		return Stream.of(Arguments.of(new String[] { "representationism", "misrepresentation" }, true),
 				Arguments.of(new String[] { "pacecar", "carrace" }, false)

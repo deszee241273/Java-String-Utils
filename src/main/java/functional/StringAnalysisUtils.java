@@ -4,7 +4,6 @@ import static java.util.function.Function.identity;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,13 +33,6 @@ public class StringAnalysisUtils {
 
 	}
 
-	private static Map<Character, Long> freqMapFactory(String str) {
-
-		return str.chars().mapToObj(c -> (char) c)
-				.collect(Collectors.groupingBy(identity(), HashMap::new, Collectors.counting()));
-
-	}
-
 	static int maxNonRepeatSequence(String str) {
 
 		Objects.requireNonNull(str);
@@ -48,27 +40,36 @@ public class StringAnalysisUtils {
 		if (str.length() == freqMapFactory(str).size())
 			return str.length();
 
-		var set = new HashSet<String>();
+		var charSet = new HashSet<String>();
 		var countMax = new AtomicInteger();
 
 		str.chars().mapToObj(c -> "" + (char) c).forEachOrdered(o -> {
 
-			if (!set.add(o)) {
+			if (!charSet.add(o)) {
 
-				countMax.set(Math.max(countMax.get(), set.size()));
-				set.clear();
+				countMax.set(Math.max(countMax.get(), charSet.size()));
+				charSet.clear();
 			}
 
 		});
 
-		return countMax.get() > set.size() ? countMax.get() : set.size();
+		var sz = charSet.size();
+		return countMax.get() > sz ? countMax.get() : sz;
 
 	}
 
-	static boolean isPalindrome(String string) {
-		
-		var h = freqMapFactory(string);
-		return true;
+	static boolean isPalindrome(String text) {
+
+		return text.replaceAll("\\s+", "").chars().boxed()
+				.collect(Collectors.groupingBy(identity(), Collectors.counting())).values().stream()
+				.filter(count -> count % 2 != 0).count() <= 1;
+
+	}
+
+	private static Map<Integer, Long> freqMapFactory(String str) {
+
+		return str.chars().boxed().collect(Collectors.groupingBy(identity(), HashMap::new, Collectors.counting()));
+
 	}
 
 	private StringAnalysisUtils() {
