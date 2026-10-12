@@ -9,15 +9,18 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class StringAnalysisUtils {
 
 	/**
 	 * 
 	 * @param a the first string.
 	 * @param b the second string.
-	 * @return anagrammatic result.
+	 * @return true if a and b are anagrams.
 	 */
-	static boolean isAnagram(String a, String b) {
+	static boolean isAnagramOf(String a, String b) {
 
 		Objects.requireNonNull(a);
 		Objects.requireNonNull(b);
@@ -33,36 +36,39 @@ public class StringAnalysisUtils {
 
 	}
 
-	static int maxNonRepeatSequence(String str) {
+	static int findLengthMaxSequence(String str) {
 
 		Objects.requireNonNull(str);
 
-		if (str.length() == freqMapFactory(str).size())
+		if (str.length() == freqMapFactory(str).size()) {
+			log.info("tested String," + str + ", has no duplicate character");
 			return str.length();
+		}
 
-		var charSet = new HashSet<String>();
+		var stringSet = new HashSet<String>();
 		var countMax = new AtomicInteger();
 
-		str.chars().mapToObj(c -> "" + (char) c).forEachOrdered(o -> {
+		str.replaceAll("\\s+", "").chars().mapToObj(c -> "" + (char) c).forEachOrdered(o -> {
+			// algorithm
+			// - add string to stringSet,
+			// - if not added set countMax and clear
+			// charSet.
+			if (!stringSet.add(o)) {
 
-			if (!charSet.add(o)) {
-
-				countMax.set(Math.max(countMax.get(), charSet.size()));
-				charSet.clear();
+				countMax.set(Math.max(countMax.get(), stringSet.size()));
+				stringSet.clear();
 			}
 
 		});
 
-		var sz = charSet.size();
-		return countMax.get() > sz ? countMax.get() : sz;
+		return Math.max(countMax.get(), stringSet.size());
 
 	}
 
-	static boolean isPalindrome(String text) {
+	static boolean isPalindrome(String str) {
 
-		return text.replaceAll("\\s+", "").chars().boxed()
-				.collect(Collectors.groupingBy(identity(), Collectors.counting())).values().stream()
-				.filter(count -> count % 2 != 0).count() <= 1;
+		return freqMapFactory(str.replaceAll("\\s+", "")).values().stream().filter(count -> count % 2 != 0)
+				.count() <= 1;
 
 	}
 

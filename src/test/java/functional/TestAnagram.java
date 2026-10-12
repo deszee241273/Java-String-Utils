@@ -15,7 +15,7 @@ class TestAnagram {
 	@MethodSource("assertions")
 	@DisplayName("test for anagrammatic char sequence.")
 	void test_assert_not_anagram(String[] input, boolean exp) {
-		assertEquals(exp, StringAnalysisUtils.isAnagram(input[0], input[1]));
+		assertEquals(exp, StringAnalysisUtils.isAnagramOf(input[0], input[1]));
 	}
 
 	private static Stream<Arguments> assertions() {

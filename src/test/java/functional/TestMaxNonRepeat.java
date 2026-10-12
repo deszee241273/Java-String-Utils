@@ -16,7 +16,7 @@ class TestMaxNonRepeat {
 	@DisplayName("input test string contains repeats.")
 	void test_with_repeats(String input, int expectedResult) {
 
-		assertEquals(expectedResult, StringAnalysisUtils.maxNonRepeatSequence(input));
+		assertEquals(expectedResult, StringAnalysisUtils.findLengthMaxSequence(input));
 	}
 
 	private static Stream<Arguments> inputsAndResults() {
